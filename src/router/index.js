@@ -1,30 +1,41 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+
+const Main = () => import('components/Main.vue')
+const Release = () => import('components/Release.vue')
+const Own = () => import('components/Own.vue')
 
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
-    name: 'home',
-    component: Home
+    redirect: '/main',
   },
   {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: function () {
-      return import(/* webpackChunkName: "about" */ '../views/About.vue')
-    }
-  }
+    path: '/main',
+    component: Main
+  },
+  {
+    path: '/release',
+    component: Release
+  },
+  {
+    path: '/own',
+    component: Own
+  },
+  
 ]
+
+//解决Navigating to current location ("/list") is not allowed问题
+const routerPush = VueRouter.prototype.push
+VueRouter.prototype.push = function push(location) {
+  return routerPush.call(this, location).catch(error=> error)
+}
+
 
 const router = new VueRouter({
   mode: 'history',
-  base: process.env.BASE_URL,
   routes
 })
 
