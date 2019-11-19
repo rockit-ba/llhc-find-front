@@ -30,9 +30,6 @@ export default {
     },
     components:{
     },
-    created () {
-        // console.log(document.getElementById("a").innerHTML)
-    },
     
 
 }

@@ -2,7 +2,7 @@ import {request} from './request'
 
 export function mainListRequest(){
     return request({
-        url: "/property/listprop",
+        url: "/front/listprop",
         method: 'get',
       })
 }

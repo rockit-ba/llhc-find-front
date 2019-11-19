@@ -23,7 +23,7 @@
                           />
                           <div class="bottom">
                               <p class="date">{{item.createTime}}</p>
-                              <van-button class="findButtom" round type="info" size="small">认领</van-button>
+                              <van-button  class="findButtom" @click="claim(item.id,item.upcoming)" round :type="claimStyle(item.upcoming)" size="small">认领</van-button>
                           </div>
                       </slot>
                   </van-cell>
@@ -37,6 +37,7 @@
 
 <script>
 import {mainListRequest} from "network/mainListRequest"
+import {mainClaimRequest} from "network/mainClaimRequest"
 export default {
     name: 'Main',
     data () {
@@ -52,6 +53,31 @@ export default {
       
     },
     methods:{
+      //用户认领的方法,用户点击的时候传入对应点击的物品的id和用户id
+      claim(propId,upcoming){  //这里的是物品的id
+      //如果物品的upcoming=0，则提示用户已经被他人提交认领
+        if(upcoming == 0){
+          const notify = this.$notify
+          notify.setDefaultOptions({type:"warning"})
+          notify('亲，该物品已被他人提交认领，请前往餐厅确认~');
+        }else{
+            //用户登录之后，可以在这里获取全局的用户id，这里暂且模拟写死
+            mainClaimRequest(propId,'1195979098782986242').then(res => {
+              if(res.flag){
+                //此时被点击认领的物品的属性已经被修改
+                this.onRefresh()
+              }
+            })
+        }
+        
+      },
+      claimStyle(upcoming){
+        if(upcoming == 0){  //表示已经被人提交认领，并且还未被管理员处理
+          return 'warning'
+        }else{
+          return 'info'
+        }
+      },
       //下拉刷新的方法，与向下滑动所作的事情基本一样
       onRefresh() {
         setTimeout(() => {
