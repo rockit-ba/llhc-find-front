@@ -4,7 +4,7 @@ export function request(config) {
   // 1.创建axios的实例
   //baseURL: 'http://172.16.1.111:9001/',
   const instance = axios.create({
-    baseURL: 'http://127.0.0.1:9001/',
+    baseURL: 'http://localhost:9001',
     timeout: 5000
   })
 

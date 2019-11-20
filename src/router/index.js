@@ -4,13 +4,16 @@ import VueRouter from 'vue-router'
 const Main = () => import('components/Main.vue')
 const Release = () => import('components/Release.vue')
 const Own = () => import('components/Own.vue')
+const Login = () => import('components/Login.vue')
+const Register = () => import('components/Register.vue')
 
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
-    redirect: '/main',
+    // redirect: '/main',
+    redirect: '/login',
   },
   {
     path: '/main',
@@ -24,6 +27,14 @@ const routes = [
     path: '/own',
     component: Own
   },
+  {
+    path: '/login',
+    component: Login
+  },
+  {
+    path: '/register',
+    component: Register
+  },
   
 ]
 
@@ -32,6 +43,7 @@ const routerPush = VueRouter.prototype.push
 VueRouter.prototype.push = function push(location) {
   return routerPush.call(this, location).catch(error=> error)
 }
+
 
 
 const router = new VueRouter({
