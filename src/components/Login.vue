@@ -1,6 +1,9 @@
 <template>
   <div>
-       <p class="sign">ByteFuture</p>
+      
+        <img width="20%" height="20%" style="margin-left:12%;margin-top:10%;" src="~assets/img/flag.png" />
+        <span class="sign">ByteFuture</span>
+      
        <div class="form">
            <van-cell-group class="form-group">
                 <van-field
@@ -103,7 +106,6 @@ export default {
 <style>
     .form{
         margin-top: 50px;
-        
     }
     .form-group{
         margin: auto;
@@ -134,17 +136,16 @@ export default {
     }
 
 
-
-
-
     .user-login{
         animation:login 100s;
     }
     .sign {
+        margin-top: 15%;
+        margin-right: 15%;
+        float: right;
         text-align: center;
-        font-size: 40px;
+        font-size: 35px;
         font-family: 'Lucida Console';
-        margin-top: 50px;
         text-shadow: 3px 3px 3px #A6A5A5;
         animation:sign 100s;
     }

@@ -1,6 +1,6 @@
 <template>
   <div>
-       <p class="sign">ByteFuture</p>
+       <p class="register-sign">ByteFuture</p>
        <div class="form">
            <van-cell-group class="form-group">
                 <van-field
@@ -50,7 +50,6 @@
                     size="large"
                     icon="medel"
                     @click=register
-                    type="info"
                     :disabled=isIllegal()
                     style="margin-left:33%;margin-top:20%;width: 35%;"
                 >注册
@@ -140,5 +139,85 @@ export default {
     .register-button {
        margin: auto;
         width: 80%;
+    }
+    .register-sign {
+        margin-top: 15%;
+        text-align: center;
+        font-size: 35px;
+        font-family: 'Lucida Console';
+        text-shadow: 3px 3px 3px #A6A5A5;
+        animation:register-sign 100s;
+    }
+    .register-login {
+        animation:register 100s;
+    }
+
+    @keyframes register-sign
+    {
+        3%   {color:#FF9E00;}
+        6%   {color:#FFAD00;}
+        9%   {color:#FFD500;}
+        12%   {color:#C6FF00;}
+        15%   {color:#77FF00;}
+        18%   {color:#00FF68;}
+        21%   {color:#77FF00;}
+        24%   {color:#C6FF00;}
+        27%   {color:#FFD500;}
+        30%  {color:#FF9E00;}
+        33%   {color:#FFAD00;}
+        36%   {color:#FFD500;}
+        39%   {color:#C6FF00;}
+        42%   {color:#77FF00;}
+        45%   {color:#00FF68;}
+        48%   {color:#77FF00;}
+        51%   {color:#C6FF00;}
+        54%   {color:#FFD500;}
+        57%  {color:#FF9E00;}
+        60%   {color:#FFAD00;}
+        63%   {color:#FFD500;}
+        66%   {color:#C6FF00;}
+        69%   {color:#77FF00;}
+        72%   {color:#00FF68;}
+        75%   {color:#77FF00;}
+        78%   {color:#C6FF00;}
+        83%   {color:#FFD500;}
+        88%  {color:#FF9E00;}
+        95%   {color:#FFAD00;}
+        100%   {color:#FFD500;}
+        
+    }
+     @keyframes register
+    {
+        3%   {background-color:#C6FF00;}
+        6%   {background-color:#FFD500;}
+        9%  {background-color:#FF9E00;}
+        12%   {background-color:#FFAD00;}
+        15%   {background-color:#FFD500;}
+        18%   {background-color:#77FF00;}
+        21%   {background-color:#C6FF00;}
+        24%   {background-color:#FFD500;}
+        27%  {background-color:#FF9E00;}
+        30%   {background-color:#FFAD00;}
+        33%   {background-color:#FFD500;}
+        36%   {background-color:#77FF00;}
+        39%   {background-color:#C6FF00;}
+        42%   {background-color:#FFD500;}
+        45%  {background-color:#FF9E00;}
+        48%   {background-color:#FFAD00;}
+        51%   {background-color:#FFD500;}
+        54%   {background-color:#77FF00;}
+        57%   {background-color:#C6FF00;}
+        60%   {background-color:#FFD500;}
+        63%  {background-color:#FF9E00;}
+        66%   {background-color:#FFAD00;}
+        69%   {background-color:#FFD500;}
+        71%   {background-color:#77FF00;}
+        74%   {background-color:#C6FF00;}
+        77%   {background-color:#FFD500;}
+        81%  {background-color:#FF9E00;}
+        87%   {background-color:#FFAD00;}
+        92%   {background-color:#FFD500;}
+        100%   {background-color:#C6FF00;}
+        
     }
 </style>
