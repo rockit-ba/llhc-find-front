@@ -2,7 +2,7 @@
   <div>
     <!-- 下拉刷新 -->
     <van-pull-refresh v-model="isLoading" @refresh="onRefresh" >
-      release page{{$route.path}}
+      Campus page
      
     </van-pull-refresh>
   </div>
@@ -10,7 +10,7 @@
 
 <script>
 export default {
-    name: 'Release',
+    name: 'Campus',
     data () {
       return {
         isLoading: false
@@ -19,15 +19,19 @@ export default {
     methods: {
        onRefresh() {
         setTimeout(() => {
+          
           this.$toast('刷新成功');
           this.isLoading = false;
-          this.count++;
         }, 500);
       }
     },
     created () {
       
-    }
+    },
+    mounted () {
+      //控制tabbar的item显示
+        this.$emit('currentPage',1)
+    },
 }
 </script>
 

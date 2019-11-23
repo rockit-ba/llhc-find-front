@@ -1,6 +1,11 @@
 <template>
   <div>
-       <p class="register-sign">ByteFuture</p>
+        <van-row type="flex" justify="center" style="margin-top:10%;">
+            <van-col span="20">
+                <p style="text-align: center;" class="register-sign">ByteFuture</p>
+            </van-col>
+        </van-row>
+       
        <div class="form">
            <van-cell-group class="form-group">
                 <van-field
@@ -15,6 +20,7 @@
                     clearable
                     placeholder="用户名为11位手机号"
                     right-icon="question-o"
+                    @blur=isPhone
                     @click-right-icon="$toast('手机号只用作登录唯一标识，绝不会用作其它商用~')"
                     
                 />
@@ -29,6 +35,7 @@
                     type="password"
                     placeholder="请输入密码"
                     required
+                    clearable
                     right-icon=" "
                 />
                 <van-field
@@ -41,11 +48,14 @@
                     type="password"
                     placeholder="确认密码"
                     required
+                    clearable
                     right-icon=" "
                 />
             </van-cell-group>
-            <div class="register-button">
-                <van-button round 
+
+            <van-row type="flex" justify="center">
+                <van-col span="20">
+                    <van-button round 
                     class="register-login"
                     size="large"
                     icon="medel"
@@ -54,7 +64,8 @@
                     style="margin-left:33%;margin-top:20%;width: 35%;"
                 >注册
                 </van-button>
-            </div>
+                </van-col>
+            </van-row>
 
        </div>
   </div>
@@ -62,11 +73,13 @@
 
 <script>
 import {registerRequest} from "network/registerRequest"
+import {isMobileNumber} from "common/isMobileNumber"
 export default {
     name: 'Register',
     data () {
         return {
             border: false,
+            phoneFlag: false,
             username: '',
             password: '',
             configurePassword: '',
@@ -74,11 +87,19 @@ export default {
         }
     },
     methods: {
+        isPhone(){
+            this.phoneFlag = isMobileNumber(this.username)
+            if(!this.phoneFlag){
+                const notify = this.$notify
+                notify.setDefaultOptions({type:"warning"})
+                notify('手机号不合法~');
+            }
+        },
         //判断用户是否填好了信息
         isIllegal() {
             const regu = "^[ ]+$";
             const re = new RegExp(regu);
-            if(this.username.length == 11 && this.password!= '' && !re.test(this.password) && this.configurePassword!= '' && !re.test(this.configurePassword) && this.password.length == this.configurePassword.length){
+            if(this.phoneFlag == true && this.password!= '' && !re.test(this.password) && this.configurePassword!= '' && !re.test(this.configurePassword) && this.password.length == this.configurePassword.length){
                 return false
             }else{
                 return true
@@ -94,8 +115,9 @@ export default {
                         notify('恭喜您注册成功！');
                         _router.push({
                             //注册成功携带原来的参数在登录端显示
-                            path: '/login',
-                            query: {username: this.username,password: this.password}
+                            //这里使用name和param传参是为了不然参数在地址栏显示出来
+                            name: 'login',
+                            params: {username: this.username,password: this.password}
                             })
                     }else if(res.code == 20001){
                         notify.setDefaultOptions({type:"warning"})
@@ -136,13 +158,7 @@ export default {
         margin: auto;
         height: 55px;
     }
-    .register-button {
-       margin: auto;
-        width: 80%;
-    }
     .register-sign {
-        margin-top: 15%;
-        text-align: center;
         font-size: 35px;
         font-family: 'Lucida Console';
         text-shadow: 3px 3px 3px #A6A5A5;

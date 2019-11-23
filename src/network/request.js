@@ -1,4 +1,5 @@
 import axios from 'axios'
+import {getUser} from 'common/auth'
 
 export function request(config) {
   // 1.创建axios的实例
@@ -8,9 +9,17 @@ export function request(config) {
     timeout: 5000
   })
 
+  instance.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8'
+
   // 2.axios的拦截器
   // 2.1.请求拦截的作用
   instance.interceptors.request.use(config => {
+    // 每次发送请求之前检测是否有token,那么都要放在请求头发送给服务器
+    // console.log("Bearer "+getUser().token)
+    if (getUser().id !== undefined) {
+      config.headers.Authorization = "Bearer "+getUser().token
+
+    }
     return config
   }, err => {
     console.log(err);

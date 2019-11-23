@@ -1,8 +1,12 @@
 import {request} from './request'
 
-export function loginRequest(){
+export function loginRequest(phone,password){
     return request({
-        url: "/user/loginPage",
-        method: 'get',
+        url: "/user/login",
+        data: {
+          phone: phone,
+          password: password,
+        },
+        method: 'post',
       })
 }

@@ -1,8 +1,8 @@
 <template>
-  <div id="outer">
+  <div id="outer" >
     <van-pull-refresh v-model="isLoading" @refresh="onRefresh" >
       <div id="inner">   
-        <div>
+        <div >
             <!-- 数据列表 -->
               <van-list
                 v-model="loading"
@@ -39,6 +39,8 @@
 import {mainListRequest} from "network/mainListRequest"
 import {mainClaimRequest} from "network/mainClaimRequest"
 import {loginRequest} from "network/loginRequest"
+import {getUser} from 'common/auth'
+import { Dialog } from 'vant';
 export default {
     name: 'Main',
     data () {
@@ -54,22 +56,42 @@ export default {
     components: {
       
     },
+    mounted () {
+      //控制tabbar的item显示
+        this.$emit('currentPage',0)
+    },
     methods:{
+
       //用户认领的方法,用户点击的时候传入对应点击的物品的id和用户id
       claim(propId){  //这里的是物品的id
+          const _router = this.$router
           //如果物品的upcoming=0，则提示用户已经被他人提交认领
-          mainClaimRequest(propId,'1195979098782986242').then(res => {
-              if(res.code == 20007){
-                const notify = this.$notify
-                notify.setDefaultOptions({type:"warning"})
-                notify('亲，该物品已被他人提交认领，请前往餐厅确认~');
-              }else if(res.code == 20000){
-                  //此时被点击认领的物品的属性已经被修改
-                  this.onRefresh()
-              }else if(res.code == 20004){
-                  //未登录，跳转登录页面
-              }
-          })
+          //getUser().id查询用户的id
+          Dialog.confirm({
+            title: '提示',
+            message: '您确定要提交认领申请吗？'
+          }).then(() => {
+            // on confirm
+              mainClaimRequest(propId,getUser().id,_router).then(res => {
+                  if(res.code == 20007){
+                    const notify = this.$notify
+                    notify.setDefaultOptions({type:"warning"})
+                    notify('亲，该物品已被他人提交认领，请前往餐厅确认~');
+                  }else if(res.code == 20000){
+                      //此时被点击认领的物品的属性已经被修改
+                      this.onRefresh()
+                  }else if(res.code == 20004){
+                      //未登录，跳转登录页面
+                      _router.push({
+                        name: 'login',
+                        params: {page: 'main'}
+                      })
+                  }
+              })
+          }).catch(() => {
+            // on cancel
+          });
+          
         
       },
       claimStyle(upcoming){

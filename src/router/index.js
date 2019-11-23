@@ -1,38 +1,69 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
-const Main = () => import('components/Main.vue')
-const Release = () => import('components/Release.vue')
-const Own = () => import('components/Own.vue')
+
+
+
 const Login = () => import('components/Login.vue')
 const Register = () => import('components/Register.vue')
+const All = () => import('components/All.vue')
+const Main = () => import('components/Main.vue')
+const Campus = () => import('components/Campus.vue')
+const Own = () => import('components/Own.vue')
+const Setting = () => import('components/Setting.vue')
 
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
-    // redirect: '/main',
-    redirect: '/login',
+    redirect: '/all/main',
   },
   {
-    path: '/main',
-    component: Main
-  },
-  {
-    path: '/release',
-    component: Release
-  },
-  {
-    path: '/own',
-    component: Own
+    path: '/all',
+    name: 'all',
+    component: All,
+    children: [
+      {
+        path: 'main',
+        name: 'main',
+        component: Main,
+        meta: {
+          title: 'main',
+          keepAlive: true,
+        }
+      },
+      {
+        path: 'campus',
+        name: 'campus',
+        component: Campus
+      },
+      {
+        path: 'own',
+        name: 'own',
+        component: Own,
+        meta: {
+          title: 'own',
+          keepAlive: true,
+        }
+      },
+      {
+        path: 'setting',
+        name: 'setting',
+        component: Setting
+      },
+
+    ],
+    
   },
   {
     path: '/login',
+    name: 'login',
     component: Login
   },
   {
     path: '/register',
+    name: 'register',
     component: Register
   },
   
@@ -45,10 +76,10 @@ VueRouter.prototype.push = function push(location) {
 }
 
 
-
 const router = new VueRouter({
   mode: 'history',
-  routes
+  routes,
+
 })
 
 export default router
