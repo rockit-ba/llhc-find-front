@@ -16,4 +16,8 @@ npm run build
 ```
 
 ### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+```
+
+具体的图片上传服务是基于本地的nginx配置文件访问，便于此时，可根据文件生成方法目录自行搭建。
+```
+
