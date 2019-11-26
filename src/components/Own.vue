@@ -1,27 +1,32 @@
 <template>
-  <div class="own-outer">
+  <div>
     <!-- 下拉刷新 -->
     <van-pull-refresh v-model="isLoading" @refresh="onRefresh" >
 
     <van-row  type="flex" justify="center">
-      <van-col span="23" class="own-1" >
+      <van-col span="24" class="own-1" >
         
         <van-collapse v-model="activeNames">
           <van-collapse-item
-            title="我的认领"
             name="1"
-            icon="bag"
+            size="large"
           >
+            <van-icon
+                slot="icon"
+                color="#0099FF"
+                name="gift"
+                size='25px'
+                style="line-height: inherit;"
+              />
+            <p style="margin-left: 5%;" slot="title">我的认领</p>
             <van-card
               centered
               v-for="item in ownList"
               :title=item.description
-              :thumb=item.picUrl
-              @click="showImg(item.picUrl);show = true;"
             >
-            
+              <van-image style="margin-top:20%;" slot="thumb" :src="item.picUrl" @click="showImg(item.picUrl);show = true;"/>
               <div slot="footer">
-                <van-button v-show="item.id !== undefined "   size="mini" type="danger" @click="ownCancel(item.id)">取消认领</van-button>
+                <van-button v-show="item.id !== undefined "  size="mini" type="danger" @click="ownCancel(item.id)">取消认领</van-button>
               </div>
             </van-card>
           </van-collapse-item>
@@ -122,8 +127,5 @@ export default {
 </script>
 
 <style>
-  .own-outer {
-    background-color: #F0F0F0;
-  }
 
 </style>

@@ -1,37 +1,36 @@
 <template>
   <div >
-    <div class="view">
-        <div id="top" class="header" >
-            <van-image
-                v-if="user.name !== undefined  && isShowAvatar"
-                style="margin-left: 12px;margin-top: 3px;"
-                fit="cover"
-                round
-                width="50px"
-                height="50px"
-                :src=user.avatar
-            />
-            <!-- <div style="float:right;margin-top:5%;margin-right: 6%;"  v-if="user.name===undefined">
-                <router-link to="/login">登陆</router-link>
-            </div> -->
-            <van-notice-bar style="margin-left: 15%;margin-top:3px;height: 50px;" 
-                :text=content 
-                left-icon="volume-o" 
-            />
-        </div>
-    
+        <!-- 当到了设置页面的时候不显示顶部栏 -->
+        <van-sticky v-if="isShowAvatar == true ">
+            <van-row style="background-color:#FFFBE8;">
+                <van-col span="4" offset="1" style="text-align: center;margin-top: 1%;margin-bottom: 1%;">
+                    <van-image
+                        v-if="user.name !== undefined  && isShowAvatar"
+                        fit="cover"
+                        round
+                        width="50px"
+                        height="50px"
+                        :src=user.avatar
+                    />
+                </van-col>
+                <van-col span="19" style="margin-top: 2%;">
+                    <van-notice-bar 
+                        :text=content 
+                        left-icon="volume-o" 
+                    />
+                </van-col>
+            </van-row>
+        </van-sticky>
         <!-- 这里是每个模块要展示的东西 -->
-        <div class="content" >
+        <div  >
             <!-- 设置内容的顶部和底部被固定栏位遮挡的部分，这个非常重要 -->
-            <div style="margin-top:55px;margin-bottom:50px;" >
+            <div style="margin-bottom:50px;" >
                 <keep-alive>
                     <router-view v-if="$route.meta.keepAlive"  @currentPage=changPage></router-view>
                 </keep-alive>
                 <router-view v-if="!$route.meta.keepAlive" @currentPage=changPage></router-view>
             </div>
         </div>
-    
-    </div>
 
     <!-- 底部组件 -->
     <van-tabbar v-model="active" :safe-area-inset-bottom=adapt>
@@ -107,40 +106,8 @@ export default {
 </script>
 
 <style>
-    #top {
-        background-color:#FFFBE8;
-        height: 55px;
-        box-shadow: 0 1px 1px rgba(150,150,150,.6);
-
-    }
     .van-image {
         float:left; 
     }
-    .view {
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: 0;
-        z-index: 1;
-        overflow: hidden;
-        width: 100%;
-        height: 100%;
-        margin: 0 auto;
-        -webkit-box-sizing: border-box;
-        box-sizing: border-box;
-    }
-    .header {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        z-index: 1000;
-        width: 100%;
-    }
-    .content {
-        height: 100%; overflow-y: scroll;
-        position: absolute;
-        width: 100%;
-        
-    }
+    
 </style>
