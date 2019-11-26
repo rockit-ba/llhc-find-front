@@ -1,8 +1,8 @@
 import {request} from './request'
 
-export function mainListRequest(){
+export function mainListRequest(page,size){
     return request({
-        url: "/front/listprop",
+        url: "/front/listprop/"+page+"/"+size,
         method: 'get',
       })
 }

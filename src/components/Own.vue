@@ -17,6 +17,7 @@
               v-for="item in ownList"
               :title=item.description
               :thumb=item.picUrl
+              @click="showImg(item.picUrl);show = true;"
             >
             
               <div slot="footer">
@@ -28,7 +29,11 @@
 
       </van-col>
     </van-row>
-
+    <!-- 预览图片 -->
+    <van-image-preview
+      v-model="show"
+      :images="images"
+    />
     </van-pull-refresh>
   </div>
 </template>
@@ -42,6 +47,8 @@ export default {
     name: 'Own',
     data () {
       return {
+        images: [],  //预览图片列表
+        show: false, //是否显示预览图片
         isLoading: false,
         activeNames: [],
         ownList: [
@@ -56,6 +63,10 @@ export default {
       };
     },
     methods: {
+        //预览图片
+        showImg(img){
+          this.images = [img]
+        },
         onRefresh() {
           setTimeout(() => {
             this.refresh()
@@ -92,7 +103,7 @@ export default {
               }else if(res.code == 20000){
                 this.ownList = res.data
               }else{
-                this.ownList = [{description: '您还没有添加认领记录或者已被管理员撤回申请~', picUrl: 'http://image.llhc.com/images/flag/flag.png'}]
+                this.ownList = [{description: '您还没有添加认领记录或者已被管理员撤回申请~', picUrl: 'http://image.llhc.com/flag/flag.png'}]
               }
               
             })

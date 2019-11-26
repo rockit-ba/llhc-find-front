@@ -1,6 +1,5 @@
 <template>
   <div class="settong-outer">
-
     <van-row class="setting-row-1">
       <van-col span="6" offset="2" style="margin-top:1%;">
         <!-- :src="user.avatar" -->
@@ -10,19 +9,18 @@
             width="65px"
             height="65px"
             fit="cover"
-            src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2647440584,4067241814&fm=26&gp=0.jpg"
+            :src="user.avatar"
             
           />
       </van-col>
       <van-col span="15" offset="1">
         <van-row class="setting-nickname" @click="updateNickname">
-            <!-- <p v-show="user.name != 'null'"><strong>{{user.name}}</strong></p>
-            <p v-show="user.name == 'null'" style="color: #9A9090;">点击修改昵称</p> -->
-            <p ><strong>宁采野花不采臣</strong></p>
+            <p v-show="user.name != 'null'"><strong>{{user.name}}</strong></p>
+            <p v-show="user.name == 'null'" style="color: #9A9090;">点击修改昵称</p>
         </van-row>
         <van-row class="setting-phone">
           <!--{{user.phone}}  -->
-            登录名:18235062724
+            登录名:{{user.phone}}
         </van-row>
       </van-col>
       
@@ -41,6 +39,7 @@
               v-model="fileList"
               multiple
               :before-read="beforeRead"
+              :after-read="afterRead"
               :max-count="1"
             />
           </van-col>
@@ -74,11 +73,11 @@
       </van-dialog>
 
     </van-row>
-
-
-    <van-row type="flex" justify="center" style="margin-top:2%;">
+    
+    <!-- 资料 -->
+    <!-- <van-row type="flex" justify="center" style="margin-top:2%;">
       <van-col span="24">
-        <van-cell size="large" is-link to="index" >
+        <van-cell size="large" is-link to="/container/info" >
           <van-col slot="icon">
               <van-icon
                 color="#10AC96"
@@ -92,11 +91,12 @@
           </van-col>
         </van-cell>
       </van-col>
-    </van-row>
-
+    </van-row> -->
+    
+    <!-- 相册 -->
     <van-row type="flex" justify="center" style="margin-top:2%;">
       <van-col span="24">
-        <van-cell size="large" is-link to="index" >
+        <van-cell size="large" is-link to="/container/photos" >
           <van-col slot="icon">
               <van-icon
                 color="#0099FF"
@@ -111,10 +111,10 @@
         </van-cell>
       </van-col>
     </van-row>
-
+    <!-- 隐私 -->
     <van-row type="flex" justify="center" style="margin-top:2%;">
       <van-col span="24">
-        <van-cell size="large" is-link to="index" >
+        <van-cell size="large" is-link to="/container/privacy" >
           <van-col slot="icon">
               <van-icon
                 color="#FF1400"
@@ -129,10 +129,10 @@
         </van-cell>
       </van-col>
     </van-row>
-
+    <!-- 意见反馈 -->
     <van-row type="flex" justify="center" style="margin-top:2%;">
       <van-col span="24">
-        <van-cell size="large" is-link to="index" >
+        <van-cell size="large" is-link to="/container/feedBack" >
           <van-col slot="icon">
               <van-icon
                 color="#FFD000"
@@ -148,6 +148,7 @@
       </van-col>
     </van-row>
 
+    <!-- 模板 -->
     <!-- <van-row type="flex" justify="center" style="margin-top:2%;">
       <van-col span="24">
         <van-cell size="large" is-link to="index" >
@@ -164,12 +165,19 @@
         </van-cell>
       </van-col>
     </van-row> -->
-    
-
+    <!-- 切换账号 -->
     <van-row type="flex" justify="center" style="margin-top:2%;">
       <van-col span="24">
         <van-cell size="large" >
-          <p slot="title" style="text-align: center;">退出登录</p>
+          <p slot="title" style="text-align: center;" @click="switchAccount">切换账号</p>
+        </van-cell>
+      </van-col>
+    </van-row>
+    <!-- 退出 -->
+    <van-row type="flex" justify="center" style="margin-top:2%;">
+      <van-col span="24">
+        <van-cell size="large" >
+          <p slot="title" style="text-align: center;" @click="loginOut">退出</p>
         </van-cell>
       </van-col>
     </van-row>
@@ -179,6 +187,7 @@
 
 <script>
 import {getUser} from "common/auth"
+import {removeUser} from "common/auth"
 import {settingNicknameRequest} from "network/settingNicknameRequest"
 import {settingAvatarRequest} from "network/settingAvatarRequest"
 import { Dialog } from 'vant';
@@ -186,6 +195,7 @@ import { Toast } from 'vant';
 import {updateAvatar} from "common/auth"
 import {updateName} from "common/auth"
 import {regexp} from "common/regexp"
+import {compressImg} from "common/compressImg"
 export default {
     name: 'Setting',
     data () {
@@ -204,13 +214,18 @@ export default {
             this.show = false
             return false;
           }
-          return true;
+          return true
+        },
+        afterRead(file) {
+            // 大于1MB的jpeg和png图片都缩小像素上传
+          if(file.file.size>1000000) {
+              this.fileList[0].content = compressImg(file)                     
+          }
         },
         //弹出修改头像
         updateAvatar(){
             //展示出弹出框，进行图片上传
             this.show = true
-            
         },
         //上传头像文件
         uploadAvatar(){
@@ -263,29 +278,58 @@ export default {
         },
         showContent(){
           if(this.user.name != 'null'){
-            return this.username
+            return this.user.name
           }else{
             return '填写昵称'
           }
-        }
+        },
+        // 切换账号
+        switchAccount() {
+            const _router = this.$router
+            Dialog.confirm({
+              title: '切换账号',
+              message: '确认要退出当前账号，切换其它账号吗？'
+            }).then(() => {
+              // on confirm
+              removeUser()
+              _router.push('/login')
+            }).catch(() => {
+              // on cancel
+            });
+        },
+        // 退出登录
+        loginOut() {
+            const _router = this.$router
+            Dialog.confirm({
+              title: '退出登录',
+              message: '确认要退出登录吗？'
+            }).then(() => {
+              // on confirm
+              removeUser()
+              _router.push('main')
+            }).catch(() => {
+              // on cancel
+            });
+        } ,       
+
 
 
     },
     comments: {
         [Dialog.Component.name]: Dialog.Component
     },
-    // created () {
-    //   //获取用户信息
-    //   if(getUser().id != undefined){
-    //     this.user = getUser()
-    //   }else{
-    //     //跳转登录页面,
-    //     this.$router.push({
-    //       name: 'login',
-    //       params: {page: 'setting'}
-    //     })
-    //   }
-    // },
+    created () {
+      //获取用户信息
+      if(getUser().id != undefined){
+        this.user = getUser()
+      }else{
+        //跳转登录页面,
+        this.$router.push({
+          name: 'login',
+          params: {page: 'setting'}
+        })
+      }
+    },
     mounted () {
       //控制tabbar的item显示
         this.$emit('currentPage',3)

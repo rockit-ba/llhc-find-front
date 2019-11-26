@@ -5,6 +5,7 @@
         <div >
             <!-- 数据列表 -->
               <van-list
+                style="background-color: #F8F8F8;"
                 v-model="loading"
                 :finished="finished"
                 finished-text="没有更多了"
@@ -13,6 +14,7 @@
                 @load="onLoad"
                 van-clearfix
               >
+                
                 <!-- 每一列的数据 -->
                   <van-cell v-for="item in list" van-clearfix>
                       <slot name="default" >
@@ -20,7 +22,9 @@
                           <van-image 
                               fit="contain"
                               :src=item.picUrl
+                              @click="showImg(item.picUrl);show = true;"
                           />
+                          </van-image> 
                           <div class="bottom">
                               <p class="date">{{item.createTime}}</p>
                               <van-button  class="findButtom" @click="claim(item.id)" round :type="claimStyle(item.upcoming)" size="small">认领</van-button>
@@ -29,6 +33,11 @@
                   </van-cell>
 
               </van-list>
+              <!-- 预览图片 -->
+              <van-image-preview
+                v-model="show"
+                :images="images"
+              />
         </div>
       </div>
     </van-pull-refresh>
@@ -45,12 +54,18 @@ export default {
     name: 'Main',
     data () {
       return {
+        images: [],  //预览图片列表
+        show: false, //是否显示预览图片
         isLogin: '',
         isLoading: false,
         list: [],
         loading: false,
         error: false,
         finished: false,
+        currentPage: 0,
+        rows: 10,
+        total: 0,
+        length: 0,  //控制加载的条数的
       }
     },
     components: {
@@ -61,7 +76,10 @@ export default {
         this.$emit('currentPage',0)
     },
     methods:{
-
+      //预览图片
+      showImg(img){
+        this.images = [img]
+      },
       //用户认领的方法,用户点击的时候传入对应点击的物品的id和用户id
       claim(propId){  //这里的是物品的id
           const _router = this.$router
@@ -69,7 +87,7 @@ export default {
           //getUser().id查询用户的id
           Dialog.confirm({
             title: '提示',
-            message: '您确定要提交认领申请吗？'
+            message: '您确定要提交认领申请吗？这需要登录权限哦'
           }).then(() => {
             // on confirm
               mainClaimRequest(propId,getUser().id,_router).then(res => {
@@ -101,52 +119,37 @@ export default {
           return 'info'
         }
       },
-      //下拉刷新的方法，与向下滑动所作的事情基本一样
+      //下拉刷新方法
       onRefresh() {
-        setTimeout(() => {
-          //先清空
-          this.list = []
-          mainListRequest().then(res => {
-            for (let i = 0; i < res.data.length; i++) {
-              if(this.list[i] == null || this.list[i] == undefined || this.list[i] == ''){
-                  this.list.push(res.data[i]);
-              }
-              //作用是过滤重复的元素，判断返回的元素中是否包含list中的id，没有才添加
-              if(!res.data.filter(r => r.hasOwnProperty(this.list[i].id))){
-                this.list.push(res.data[i]);
-              }
-                
-            }
-            if (this.list.length >= res.data.length){
-                this.$toast('刷新成功');
-                this.isLoading = false;
-                const notify = this.$notify
-                notify.setDefaultOptions({type:"success"})
-                notify('亲，共计'+this.list.length+'条记录~');
-            }
-          },error =>{
-              this.$toast('刷新失败');
-              this.isLoading = false;
-          })
-          
-        }, 500);
+          const _router = this.$router
+          setTimeout(() => {
+            //跳转到空白页面，然后立马跳回来
+            _router.replace("/all/black")
+            this.$toast('刷新成功');
+            this.isLoading = false;  
+          },error => {
+            this.$toast('刷新失败');
+            this.isLoading = false;
+          },500)
       },
       //滑动加载数据的方法
       onLoad() {
             // 异步更新数据
             setTimeout(() => {
-                mainListRequest().then(res => {
-                    for (let i = 0; i < res.data.length; i++) {
-                        this.list.push(res.data[i]);
-                    }
+                this.currentPage = this.currentPage+1
+                mainListRequest(this.currentPage,this.rows).then(res => {
+                  //每次加载10条,但如果是最后的几条可能不够十条，因此具体要根据返回的records判断
+                    for (let i = 0; i < res.data.records.length; i++) {
+    
+                        this.list.push(res.data.records[this.length])
+                        this.length = this.length+1
+                    } 
+                    this.length = 0
                     // 加载状态结束
                     this.loading = false;
                     // 数据全部加载完成
-                    if (this.list.length >= res.data.length) {
+                    if (this.list.length >= res.data.total) {
                         this.finished = true;
-                        const notify = this.$notify
-                        notify.setDefaultOptions({type:"success"})
-                        notify('共计'+this.list.length+'条记录！');
                     }
                 },error =>{
                     this.error = true;
@@ -155,7 +158,6 @@ export default {
             }, 500);
         }
     },
-    
     
 }
 </script>

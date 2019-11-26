@@ -11,9 +11,9 @@
                 height="50px"
                 :src=user.avatar
             />
-            <div style="float:right;margin-top:5%;margin-right: 6%;"  v-if="user.name===undefined">
+            <!-- <div style="float:right;margin-top:5%;margin-right: 6%;"  v-if="user.name===undefined">
                 <router-link to="/login">登陆</router-link>
-            </div>
+            </div> -->
             <van-notice-bar style="margin-left: 15%;margin-top:3px;height: 50px;" 
                 :text=content 
                 left-icon="volume-o" 
@@ -25,9 +25,9 @@
             <!-- 设置内容的顶部和底部被固定栏位遮挡的部分，这个非常重要 -->
             <div style="margin-top:55px;margin-bottom:50px;" >
                 <keep-alive>
-                    <router-view  @currentPage=changPage></router-view>
+                    <router-view v-if="$route.meta.keepAlive"  @currentPage=changPage></router-view>
                 </keep-alive>
-                <!-- <router-view v-if="!$route.meta.keepAlive"></router-view> -->
+                <router-view v-if="!$route.meta.keepAlive" @currentPage=changPage></router-view>
             </div>
         </div>
     
