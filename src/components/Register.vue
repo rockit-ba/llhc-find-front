@@ -52,6 +52,22 @@
                     right-icon=" "
                 />
             </van-cell-group>
+            <van-row type="flex" justify="center">
+                <van-col span="20">
+                    <van-cell-group>
+                        <van-field
+                            v-model="sms"
+                            center
+                            clearable
+                            label="验证码"
+                            placeholder="请输入6位短信验证码"
+                            maxlength=6
+                        >
+                            <van-button slot="button" size="small" type="primary" @click="smsSend">发送验证码</van-button>
+                        </van-field>
+                    </van-cell-group>
+                </van-col>
+            </van-row>
 
             <van-row type="flex" justify="center">
                 <van-col span="20">
@@ -74,6 +90,7 @@
 <script>
 import {registerRequest} from "network/registerRequest"
 import {isMobileNumber} from "common/isMobileNumber"
+import {smsSendRequest} from "network/smsSendRequest"
 export default {
     name: 'Register',
     data () {
@@ -83,10 +100,26 @@ export default {
             username: '',
             password: '',
             configurePassword: '',
+            sms: '',
 
         }
     },
     methods: {
+        smsSend(){
+            const notify = this.$notify
+            smsSendRequest(this.username).then(res => {
+                if(res.code == 20000){
+                    notify.setDefaultOptions({type:"success"})
+                    notify(res.message);
+                }else if(res.code == 20001){
+                    notify.setDefaultOptions({type:"warning"})
+                    notify(res.message);
+                }else if(res.code == 20006){
+                    notify.setDefaultOptions({type:"warning"})
+                    notify(res.message);
+                }
+            })
+        },
         isPhone(){
             this.phoneFlag = isMobileNumber(this.username)
             if(!this.phoneFlag){
@@ -99,7 +132,7 @@ export default {
         isIllegal() {
             const regu = "^[ ]+$";
             const re = new RegExp(regu);
-            if(this.phoneFlag == true && this.password!= '' && !re.test(this.password) && this.configurePassword!= '' && !re.test(this.configurePassword) && this.password.length == this.configurePassword.length){
+            if(this.phoneFlag == true && this.password!= '' && !re.test(this.password) && this.configurePassword!= '' && !re.test(this.configurePassword) && this.password.length == this.configurePassword.length && this.sms.length == 6){
                 return false
             }else{
                 return true
@@ -108,9 +141,9 @@ export default {
         register() {
             if(this.password == this.configurePassword){
                 const _router = this.$router
-                registerRequest(this.username,this.password,_router).then(res => {
-                    const notify = this.$notify
-                    if(res.code == 20000){
+                registerRequest(this.username,this.password,this.sms,_router).then(res => {
+                   const notify = this.$notify
+                    if(res.flag == true){
                         notify.setDefaultOptions({type:"success"})
                         notify('恭喜您注册成功！');
                         _router.push({
@@ -119,14 +152,10 @@ export default {
                             name: 'login',
                             params: {username: this.username,password: this.password}
                             })
-                    }else if(res.code == 20001){
+                    }else if(res.flag == false){
                         notify.setDefaultOptions({type:"warning"})
-                        notify('注册出了些问题，您可以稍等重新注册');
-                        _router.push("/login")
-                    }else if(res.code == 20006){
-                        notify.setDefaultOptions({type:"warning"})
-                        notify('此手机已经被注册~');
-                        _router.push("/login")
+                        notify(res.message);
+                        _router.push("/register")
                     }
                 })
             }else{
