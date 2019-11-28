@@ -5,7 +5,7 @@
 
     <van-row  type="flex" justify="center">
       <van-col span="24" class="own-1" >
-        
+        <van-sticky>
         <van-collapse v-model="activeNames">
           <van-collapse-item
             name="1"
@@ -20,17 +20,17 @@
               />
             <p style="margin-left: 5%;" slot="title">我的认领</p>
             <van-card
-              centered
               v-for="item in ownList"
               :title=item.description
             >
-              <van-image style="margin-top:20%;" slot="thumb" :src="item.picUrl" @click="showImg(item.picUrl);show = true;"/>
+              <van-image slot="thumb" :src="item.picUrl" @click="showImg(item.picUrl);show = true;"/>
               <div slot="footer">
                 <van-button v-show="item.id !== undefined "  size="mini" type="danger" @click="ownCancel(item.id)">取消认领</van-button>
               </div>
             </van-card>
           </van-collapse-item>
         </van-collapse>
+        </van-sticky>
 
       </van-col>
     </van-row>
@@ -108,7 +108,7 @@ export default {
               }else if(res.code == 20000){
                 this.ownList = res.data
               }else{
-                this.ownList = [{description: '您还没有添加认领记录或者已被管理员撤回申请~', picUrl: 'http://image.llhc.com/flag/flag.png'}]
+                this.ownList = [{description: '您还没有添加认领记录或者已被管理员撤回申请~', picUrl: 'http://172.16.11.135/flag/flag.png'}]
               }
               
             })

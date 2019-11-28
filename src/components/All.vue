@@ -3,17 +3,17 @@
         <!-- 当到了设置页面的时候不显示顶部栏 -->
         <van-sticky v-if="isShowAvatar == true ">
             <van-row style="background-color:#FFFBE8;">
-                <van-col span="4" offset="1" style="text-align: center;margin-top: 1%;margin-bottom: 1%;">
+                <van-col span="4" offset="1" style="text-align: center;margin-top: 0.5%;margin-bottom: 0.5%;">
                     <van-image
                         v-if="user.name !== undefined  && isShowAvatar"
                         fit="cover"
                         round
-                        width="50px"
-                        height="50px"
+                        width="40px"
+                        height="40px"
                         :src=user.avatar
                     />
                 </van-col>
-                <van-col span="19" style="margin-top: 2%;">
+                <van-col span="19" style="margin-top: 0.5%;">
                     <van-notice-bar 
                         :text=content 
                         left-icon="volume-o" 
