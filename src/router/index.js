@@ -7,6 +7,7 @@ const All = () => import('components/All.vue')
 const Main = () => import('components/Main.vue')
 const Black = () => import('components/Black.vue')
 const Campus = () => import('components/Campus.vue')
+const Comment = () => import('views/campus/Comment.vue')
 const Own = () => import('components/Own.vue')
 const Setting = () => import('components/Setting.vue')
 const Container = () => import('components/Container.vue')
@@ -65,6 +66,11 @@ const routes = [
     path: '/register',
     name: 'register',
     component: Register
+  },
+  {
+    path: '/comment',
+    name: 'comment',
+    component: Comment
   },
   {
     path: '/container',
