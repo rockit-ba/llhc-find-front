@@ -30,7 +30,7 @@
     <van-row type="flex" class="comment-tabbar" align="center" >
         <van-col span="19" >
             <van-field
-                v-model="message"
+                v-model="commentContent"
                 rows="1"
                 autosize
                 type="textarea"
@@ -57,18 +57,19 @@ export default {
     },
     methods: {
         commentBack(){
-
+            
         },
     },
 }
 </script>
 
 <style>
+    /* height:40px; */
     .comment-tabbar {
         position:fixed;
         width:100%;
         bottom:0px;
-        height:40px;
+        height:px;  
         z-index:2;
         overflow:hidden;
     }

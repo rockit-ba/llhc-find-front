@@ -6,7 +6,14 @@
 export default {
     name: 'Black',
     data () {
-        this.$router.replace('main')
+        if(this.$route.params.page == 'campus'){
+            this.$router.replace({
+                name: 'campus',
+                params: {active: this.$route.params.active}
+            })
+        }else{
+            this.$router.replace('main')
+        }
         return {
         }
         

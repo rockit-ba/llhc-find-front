@@ -10,7 +10,6 @@ export function compressImg(file) {
     //画布宽度
     let width = 512   
     // 监听浏览器加载图片完成，然后进行绘制
-    
     img.onload = () => {
         //画布大小按照图片的比例生成
         let height = width / (img.naturalWidth / img.naturalHeight)
@@ -22,7 +21,6 @@ export function compressImg(file) {
         context.drawImage(img, 0, 0, canvas.width, canvas.height)
         // 将绘制完成的图片重新转化为base64编码，file.file.type为图片类型，0.92为默认压缩质量
         //返回压缩后的文件
-        return canvas.toDataURL(file.type, 0.92) 
-        
+        return canvas.toDataURL(file.type, 0.82)
     }  
 }

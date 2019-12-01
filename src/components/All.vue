@@ -3,7 +3,7 @@
         <!-- 当到了设置页面的时候不显示顶部栏 -->
         <van-sticky v-if="isShowAvatar == true ">
             <van-row style="background-color:#FFFBE8;">
-                <van-col span="4" offset="1" style="text-align: center;margin-top: 0.5%;margin-bottom: 0.5%;">
+                <van-col span="3" offset="1" style="text-align: center;margin-top: 0.5%;margin-bottom: 0.5%;">
                     <van-image
                         v-if="user.name !== undefined  && isShowAvatar"
                         fit="cover"
