@@ -19,7 +19,7 @@
                 finished-text="没有更多了"
                 @load="onLoad"
             >
-                <van-cell v-for="item in list">
+                <van-cell v-for="item in list" >
                     <van-row  slot="default" >
                         <!-- 头像日期 不需要居中-->
                         <van-row>
@@ -71,9 +71,10 @@
                             </van-col>
                             <van-col span="4">
                             <van-icon 
-                            name="comment" 
-                            size="150%"
-                            @click="showComment=true;comment()"
+                                name="comment" 
+                                size="150%"
+                                :info="item.commentNum"
+                                @click="showComment=true;comment(item.id)"
                             />
                             </van-col>
                         </van-row>
@@ -105,6 +106,7 @@ export default {
             page: 0,
             size: 5,
             length: 0,
+
         }
     },
     methods: {
@@ -114,9 +116,12 @@ export default {
             
         },
         //点击评论
-       comment() {
+       comment(id) {
          //弹出评论列表
-          this.$router.push('/comment')
+          this.$router.push({
+              name: 'comment',
+              params: {itemId: id,page: 'campus',active:0}
+          })
 
        },
        onLoad() {
@@ -125,7 +130,7 @@ export default {
                 this.page = this.page+1
                 //love界面type固定是0
                 listRequest(this.page,this.size,0).then(res => {
-
+                    console.log(res)
                     for (let i = 0; i < res.data.records.length; i++) {
                         this.list.push(res.data.records[this.length])
                         this.length = this.length+1

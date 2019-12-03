@@ -73,7 +73,8 @@
                             <van-icon 
                             name="comment" 
                             size="150%"
-                            @click="showComment=true;comment()"
+                            :info="item.commentNum"
+                            @click="showComment=true;comment(item.id)"
                             />
                             </van-col>
                         </van-row>
@@ -114,9 +115,12 @@ export default {
             
         },
         //点击评论
-       comment() {
+       comment(id) {
          //弹出评论列表
-          this.$router.push('/comment')
+          this.$router.push({
+              name: 'comment',
+              params: {itemId: id,page: 'campus',active:2}
+          })
 
        },
        onLoad() {
