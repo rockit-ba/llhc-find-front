@@ -30,21 +30,21 @@
                             <van-image
                                 fit="cover"
                                 round
-                                width="40px"
-                                height="40px"
+                                width="35px"
+                                height="35px"
                                 :src=item.avatarurl
                             />
                             </van-col>
                             <van-col offset="1">
                                 <!-- 昵称 -->
-                            <p style="">{{item.name}}</p>
-                            <p style="">{{item.publishtime}}</p>
+                                <p style="font-size:13px;height: 15px;color: #656363;">{{item.name}}</p>
+                                <p style="font-size:12px;height: 12px;color: #888686;">{{item.publishtime}}</p>
                             </van-col>
                         </van-row>
                         <!-- 描述 不需要居中-->
                         <van-row style="margin-top:3%">
-                            <van-col>
-                            <p style="">{{item.comment}}</p>
+                            <van-col offset="4">
+                                <p style="">{{item.comment}}</p>
                             </van-col>
                         </van-row>
 
@@ -95,7 +95,7 @@ export default {
             finished: false,  //是否完成所有加载
 
             currpage: 0,
-            size: 5,
+            size: 10,
             length: 0,
         }
     },
@@ -114,7 +114,7 @@ export default {
                     Toast.success(res.message);
                     this.$router.push({
                         name: 'black',
-                        params: {page: 'comment',itemId: this.itemId}
+                        params: {page: 'comment',backpage:this.page,active:this.active, itemId: this.itemId}
                     })
                 }else{
                     Toast.fail('评论失败稍后重试');
@@ -127,7 +127,6 @@ export default {
                 this.currpage = this.currpage+1
                 //love界面type固定是0
                 commentList(this.currpage,this.size,this.itemId).then(res => {
-
                     for (let i = 0; i < res.data.content.length; i++) {
                         this.list.push(res.data.content[this.length])
                         this.length = this.length+1
@@ -147,6 +146,9 @@ export default {
         }
     },
     created () {
+        console.log(this.$route.params.itemId)
+        console.log(this.$route.params.page)
+        console.log(this.$route.params.active)
         if(this.$route.params.itemId != undefined){
             this.itemId = this.$route.params.itemId
         }
@@ -171,6 +173,7 @@ export default {
         height:px;  
         z-index:2;
         overflow:hidden;
+        
     }
 </style>
 

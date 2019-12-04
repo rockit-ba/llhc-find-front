@@ -39,7 +39,7 @@
                         </van-row>
                         <!-- 描述 不需要居中-->
                         <van-row style="margin-top:3%">
-                            <van-col>
+                            <van-col offset="2">
                             <p style="">{{item.description}}</p>
                             </van-col>
                         </van-row>
@@ -104,7 +104,7 @@ export default {
             finished: false,  //是否完成所有加载
 
             page: 0,
-            size: 5,
+            size: 10,
             length: 0,
         }
     },

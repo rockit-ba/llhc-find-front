@@ -39,7 +39,7 @@
                         </van-row>
                         <!-- 描述 不需要居中-->
                         <van-row style="margin-top:3%">
-                            <van-col>
+                            <van-col offset="2">
                             <p style="">{{item.description}}</p>
                             </van-col>
                         </van-row>
@@ -104,7 +104,7 @@ export default {
             finished: false,  //是否完成所有加载
 
             page: 0,
-            size: 5,
+            size: 10,
             length: 0,
 
         }
@@ -130,7 +130,6 @@ export default {
                 this.page = this.page+1
                 //love界面type固定是0
                 listRequest(this.page,this.size,0).then(res => {
-                    console.log(res)
                     for (let i = 0; i < res.data.records.length; i++) {
                         this.list.push(res.data.records[this.length])
                         this.length = this.length+1

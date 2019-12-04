@@ -89,7 +89,7 @@
                   </van-row>
                   <!-- 描述 不需要居中-->
                   <van-row style="margin-top:3%">
-                      <van-col>
+                      <van-col offset="2">
                       <p style="">{{item.description}}</p>
                       </van-col>
                   </van-row>
@@ -98,24 +98,25 @@
                   <van-row type="flex" justify="center">
                       <van-col>
                       <van-image
-                      @click="show=true;showImg(item.picUrl)"
-                      width="300px"
-                      height="300px"
-                      fit="contain"
-                      :src=item.picUrl
+                        @click="show=true;showImg(item.picUrl)"
+                        width="300px"
+                        height="300px"
+                        fit="contain"
+                        :src=item.picUrl
                       />
                       </van-col>
                   </van-row>
                   <!-- 点赞与评论 -->
                   <van-row type="flex" align="center" style="margin-top:2%">
                       <van-col span="10">
-                      <p>{{item.createTime}}</p>
+                        <p>{{item.createTime}}</p>
                       </van-col>
                       <van-col span="4" offset="10">
                       <van-icon 
-                      name="comment" 
-                      size="150%"
-                      @click="showComment=true;comment()"
+                        name="comment" 
+                        size="150%"
+                        :info="item.commentNum"
+                      @click="showComment=true;comment(item.id)"
                       />
                       </van-col>
                   </van-row>
@@ -205,20 +206,29 @@ export default {
         },
         //请求动态列表
         showActivity() {
+          Toast.loading({
+            message: '加载中...',
+            forbidClick: true
+          });
           activityRequest(getUser().id).then(res => {
             if(res.flag == true){
+              Toast.clear();
               this.activityList = res.data
             }else{
+              Toast.clear();
               Dialog.fail(res.message)
             }
           })
         },
         //点击评论
-        comment() {
-          //弹出评论列表
-          this.$router.push('/comment')
+       comment(id) {
+         //弹出评论列表
+          this.$router.push({
+              name: 'comment',
+              params: {itemId: id,page: 'own',active:0}
+          })
 
-        },
+       },
         //预览图片
         showImg(img){
           this.images = [img]

@@ -14,7 +14,7 @@ export default {
         }else if(this.$route.params.page == 'comment'){
             this.$router.replace({
                 name: 'comment',
-                params: {itemId: this.$route.params.itemId}
+                params: {itemId: this.$route.params.itemId,page: this.$route.params.backpage,active: this.$route.params.active}
             })
         }else{
             this.$router.replace('main')
