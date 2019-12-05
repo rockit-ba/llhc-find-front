@@ -89,7 +89,7 @@
                   </van-row>
                   <!-- 描述 不需要居中-->
                   <van-row style="margin-top:3%">
-                      <van-col offset="2">
+                      <van-col>
                       <p style="">{{item.description}}</p>
                       </van-col>
                   </van-row>
@@ -99,21 +99,21 @@
                       <van-col>
                       <van-image
                         @click="show=true;showImg(item.picUrl)"
-                        width="300px"
-                        height="300px"
+                        width="100%"
+                        height="220px"
                         fit="contain"
                         :src=item.picUrl
                       />
                       </van-col>
                   </van-row>
                   <!-- 点赞与评论 -->
-                  <van-row type="flex" align="center" style="margin-top:2%">
+                  <van-row type="flex" align="center" style="margin-top:4%">
                       <van-col span="10">
-                        <p>{{item.createTime}}</p>
+                        <p style="color: #616161">{{item.createTime}}</p>
                       </van-col>
                       <van-col span="4" offset="10">
                       <van-icon 
-                        name="comment" 
+                        name="comment-o" 
                         size="150%"
                         :info="item.commentNum"
                       @click="showComment=true;comment(item.id)"

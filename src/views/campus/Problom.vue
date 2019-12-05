@@ -6,13 +6,13 @@
                 <van-icon name="volume" size="15px" color="#F27714"/>
             </van-col>
             <van-col span="20">
-            <p style="text-align: center;">问题求助</p>
+                <p style="text-align: center;">问题求助</p>
             </van-col>
         </van-row> 
         </div>
         <!-- 内容 -->
         <van-row type="flex" justify="center" slot="default" style="margin-top: 2%;">
-        <van-col span="22" >
+        <van-col span="24" >
             <van-list
                 v-model="loading"
                 :finished="finished"
@@ -24,58 +24,58 @@
                         <!-- 头像日期 不需要居中-->
                         <van-row>
                             <van-col>
-                            <van-image
-                            fit="cover"
-                            round
-                            width="40px"
-                            height="40px"
-                            :src=item.avatarUrl
-                            />
+                                <van-image
+                                    fit="cover"
+                                    round
+                                    width="40px"
+                                    height="40px"
+                                    :src=item.avatarUrl
+                                />
                             </van-col>
                             <van-col offset="1">
                                 <!-- 昵称 -->
-                            <p style="margin-top:10%">{{item.name}}</p>
+                                <p style="margin-top:10%">{{item.name}}</p>
                             </van-col>
                         </van-row>
                         <!-- 描述 不需要居中-->
                         <van-row style="margin-top:3%">
-                            <van-col offset="2">
-                            <p style="">{{item.description}}</p>
+                            <van-col>
+                                <p style="">{{item.description}}</p>
                             </van-col>
                         </van-row>
                         <!-- 图片 需要居中width="19rem"
                             height="19rem"-->
                         <van-row type="flex" justify="center">
                             <van-col>
-                            <van-image
-                            @click="show=true;showImg(item.picUrl)"
-                            width="300px"
-                            height="300px"
-                            fit="contain"
-                            :src=item.picUrl
-                            />
+                                <van-image
+                                    @click="show=true;showImg(item.picUrl)"
+                                    width="100%"
+                                    height="220px"
+                                    fit="contain"
+                                    :src=item.picUrl
+                                />
                             </van-col>
                         </van-row>
                         <!-- 点赞与评论 -->
-                        <van-row type="flex" align="center" style="margin-top:2%">
+                        <van-row type="flex" align="center" style="margin-top:4%">
                             <van-col span="10">
-                            <p>{{item.createTime}}</p>
+                                <p style="color: #616161">{{item.createTime}}</p>
                             </van-col>
                             <van-col span="5" offset="5">
-                            <van-icon 
-                            name="good-job" 
-                            size="150%"
-                            :color=color
-                            @click="color='#EE0A24'"
-                            />
+                                <van-icon 
+                                    name="good-job-o" 
+                                    size="150%"
+                                    :color=color
+                                    @click="color='#EE0A24'"
+                                />
                             </van-col>
                             <van-col span="4">
-                            <van-icon 
-                            name="comment" 
-                            size="150%"
-                            :info="item.commentNum"
-                            @click="showComment=true;comment(item.id)"
-                            />
+                                <van-icon 
+                                    name="comment-o" 
+                                    size="150%"
+                                    :info="item.commentNum"
+                                    @click="showComment=true;comment(item.id)"
+                                />
                             </van-col>
                         </van-row>
                         <!-- 评论 -->

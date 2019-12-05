@@ -256,15 +256,22 @@ export default {
             if(this.fileList.length == 0){
               Toast.fail('您没有上传头像~');
             }else{
+                Toast.loading({
+                  message: '上传中...',
+                  forbidClick: true
+                });
                 //不仅要传图片，还要获取用户的id，后台上传成功后修改用户的头像地址
                 settingAvatarRequest(this.fileList[0].content,this.fileList[0].file.name,getUser().id).then(res => {
                     //返回一个头像的上传成功地址
                     if(res.code == 20000){
+                      Toast.clear();
                       Toast.success('修改成功！');
                       this.user.avatar = res.data
+                      this.fileList = []
                       //修改原来cookit中的头像信息
                       updateAvatar(res.data)
                     }else{
+                      Toast.clear();
                       Toast.fail('上传失败，稍后重试~');
                     }
                 })
@@ -288,10 +295,15 @@ export default {
               Toast.fail('并未输入任何字符~');
             }else{
               //发送请求，修改
+              Toast.loading({
+                  message: '修改中...',
+                  forbidClick: true
+              });
               settingNicknameRequest(this.name,this.user.id).then(res => {
                   if(res.code == 20000){
                       this.user.name = res.data
                       updateName(res.data)
+                      Toast.clear();
                   }
               })
             }

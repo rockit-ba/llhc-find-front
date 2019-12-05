@@ -36,7 +36,7 @@ const routes = [
       {
         path: 'campus',
         name: 'campus',
-        component: Campus
+        component: Campus,
       },
       {
         path: 'own',

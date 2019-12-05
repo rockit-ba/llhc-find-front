@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- 下拉刷新 -->
-    <van-pull-refresh v-model="isLoading" @refresh="onRefresh" >
+    <van-pull-refresh v-model="isLoading" @refresh="onRefresh" style="background-color: #F0F0F0;">
       <!-- 轮播图 -->
       <swipe></swipe>
       <!-- 导航栏 -->
@@ -19,7 +19,7 @@
             
             <!-- 日常告白 -->
             <love @previewImg=showPreviewImg></love>  
-
+    
             <!-- 物品交流 -->
             <things @previewImg=showPreviewImg></things>
             

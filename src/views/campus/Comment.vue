@@ -40,6 +40,10 @@
                                 <p style="font-size:13px;height: 15px;color: #656363;">{{item.name}}</p>
                                 <p style="font-size:12px;height: 12px;color: #888686;">{{item.publishtime}}</p>
                             </van-col>
+                            <van-col offset="9" v-show="item.userid == userid">
+                                <!-- 删除自己的评论 -->
+                                <van-icon size="16px" name="delete" @click="removeComment(item._id)"></van-icon>
+                            </van-col>
                         </van-row>
                         <!-- 描述 不需要居中-->
                         <van-row style="margin-top:3%">
@@ -81,6 +85,8 @@ import {getUser} from "common/auth"
 import {commentPublish} from "network/comment/commentPublish"
 import {commentList} from "network/comment/commentList"
 import { Toast } from 'vant';
+import {removeComment} from "network/comment/removeComment"
+import { Dialog } from 'vant'
 export default {
     name: 'Comment',
     data () {
@@ -97,9 +103,32 @@ export default {
             currpage: 0,
             size: 10,
             length: 0,
+
+            userid: '',
         }
     },
     methods: {
+        //删除评论
+        removeComment(_id) {
+            Dialog.confirm({
+                title: '删除',
+                message: '确认删除评论吗？'
+            }).then(() => {
+                // on confirm
+                removeComment(_id).then(res => {
+                    if(res.flag == true){
+                        Toast.success(res.message);
+                        this.$router.push({
+                            name: 'black',
+                            params: {page: 'comment',backpage:this.page,active:this.active, itemId: this.itemId}
+                        })
+                    }
+                })
+            }).catch(() => {
+                // on cancel
+            });
+            
+        },
         commentBack(){
             this.$router.push({
                 name: this.page,
@@ -146,9 +175,6 @@ export default {
         }
     },
     created () {
-        console.log(this.$route.params.itemId)
-        console.log(this.$route.params.page)
-        console.log(this.$route.params.active)
         if(this.$route.params.itemId != undefined){
             this.itemId = this.$route.params.itemId
         }
@@ -158,6 +184,8 @@ export default {
         if(this.$route.params.active != undefined){
             this.active = this.$route.params.active
         }
+
+        this.userid = getUser().id
         
         
     }
