@@ -19,7 +19,9 @@
                   <van-cell v-for="item in list" van-clearfix>
                       <slot name="default" >
                           <p class="desc">{{item.description}}</p>
-                          <van-image 
+                          <van-image
+                              width="100%"
+                              height="190px" 
                               fit="contain"
                               :src=item.picUrl
                               @click="showImg(item.picUrl);show = true;"
@@ -168,11 +170,10 @@ export default {
   }
   #inner {
     background-color: aquamarine;
-    margin-left: 15px;
-    margin-right: 15px;
   }
   .desc {
-        border-radius: 13px 13px 0px 0px;
+        border-radius: 13px 13px 13px 13px;
+        margin-bottom: 3%;
         text-align: center;
         background-color: antiquewhite;
    }

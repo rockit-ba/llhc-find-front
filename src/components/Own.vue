@@ -2,6 +2,29 @@
   <div style="background-color:#F0F0F0">
     <!-- 下拉刷新 -->
     <van-pull-refresh v-model="isLoading" @refresh="onRefresh" >
+    
+    <!-- 消息 -->
+    <van-row type="flex" justify="center" align="center">
+      <van-col span="24">
+        <van-cell is-link to="/container/feedBack" >
+          <van-col slot="icon">
+              <van-icon
+                color="#27A620"
+                name="chat"
+                size='25px'
+                style="line-height: inherit;"
+                
+              />
+          </van-col>
+          <van-col slot="title" offset="1">
+            <p style="font-size: 116%;">我的消息</p>
+          </van-col>
+          <van-col slot="title" offset="2">
+            <van-icon info="99+"></van-icon>
+          </van-col>
+        </van-cell>
+      </van-col>
+    </van-row>
 
     <!-- 我的认领 -->
     <van-row  type="flex" justify="center" style="margin-top:2%">
@@ -30,11 +53,11 @@
             :title=item.description
           >
             <van-image slot="thumb" 
-            width="90"
-            height="90"
-            fit="contain"
-            :src="item.picUrl" 
-            @click="showImg(item.picUrl);show = true;"
+              width="100%"
+              height="100px"
+              fit="contain"
+              :src="item.picUrl" 
+              @click="showImg(item.picUrl);show = true;"
             />
             <div slot="footer">
               <van-button v-show="item.id !== undefined "  size="mini" type="danger" @click="ownCancel(item.id)">取消认领</van-button>
@@ -127,6 +150,8 @@
       </van-col>
     </van-row>
 
+
+
     <!-- 预览图片 -->
     <van-image-preview
       v-model="show"
@@ -210,10 +235,16 @@ export default {
             message: '加载中...',
             forbidClick: true
           });
+          const _router = this.$router
           activityRequest(getUser().id).then(res => {
             if(res.flag == true){
               Toast.clear();
               this.activityList = res.data
+            }else if(res.code == 20004){
+              _router.push({
+                name: 'login',
+                params: {page: 'setting'}
+              })
             }else{
               Toast.clear();
               Dialog.fail(res.message)
@@ -244,7 +275,7 @@ export default {
           },500)
         },
         ownCancel(id){
-
+          const _router = this.$router
           Dialog.confirm({
             title: '提示',
             message: '您确定要取消认领申请？'
@@ -252,6 +283,11 @@ export default {
             ownCancelRequest(id).then(res => {
               if(res.code == 20000){
                   this.refresh()
+              }else if(res.code == 20004){
+                _router.push({
+                  name: 'login',
+                  params: {page: 'own'}
+                })
               }
             })
           }).catch(() => {
@@ -262,7 +298,7 @@ export default {
         refresh(){
             //请求该用户的已经发起认领的物品列表
             const _router = this.$router
-            ownPropertyListRequest(getUser().id,_router).then(res => {
+            ownPropertyListRequest(getUser().id,).then(res => {
               if(res.code == 20004){
                 _router.push({
                       name: 'login',
@@ -277,12 +313,17 @@ export default {
             })
         }
     },
-
     created () {
-      this.refresh()
-      if(getUser().id != undefined){
+      if(getUser().id == undefined){
+        this.$router.push({
+            name: 'login',
+            params: {page: 'own'}
+        })
+      }else{
+        this.refresh()
         this.user = getUser()
       }
+      
     },
 
     //用于控制tabbar的item显示

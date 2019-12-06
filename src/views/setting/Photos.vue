@@ -10,28 +10,73 @@
         </van-col>
       </van-row>
     </van-sticky>
-    <img style="height: auto;max-width: 100%;" src="http://img3.imgtn.bdimg.com/it/u=3582549147,2816101432&fm=26&gp=0.jpg"/>
-      
+    
+    <van-row type="flex" justify="center" align="center">
+      <van-col span="24">
+        <van-grid :border="true" :column-num="3">
+          <van-grid-item v-for="item in photosList">
+            <van-image 
+              @click="show=true;showImg(item)"
+              :src="item" 
+            />
+          </van-grid-item>
+        </van-grid>
+      </van-col>
+    </van-row>
+    
+    <!-- 预览图片 -->
+    <van-image-preview
+      v-model="show"
+      :images="images"
+    />
   </div>
 </template>
 
 <script>
+import {photosList} from "network/own/photosList"
+import {getUser} from "common/auth"
+import { Toast } from 'vant';
 export default {
     name: 'Photos',
     data () {
       return {
-        
+        images: [],  //预览图片列表
+        show: false, //是否显示预览图片
+        photosList: []  //图片列表
       }
     },
     methods: {
         //回退
         photosBack(){
             history.back()
+        },
+        //预览图片
+        showImg(img){
+          this.images = [img]
+        },
+    },
+    created () {
+      Toast.loading({
+        message: '加载中...',
+        forbidClick: true
+      });
+      const _router = this.$router
+      photosList(getUser().id).then(res => {
+        if(res.flag == true){
+          this.photosList = res.data
+          Toast.clear();
+        }else if(res.code == 20004){
+          _router.push({
+            name: 'login',
+            params: {page: 'setting'}
+          })
         }
+      })
     }
 }
 </script>
 
 <style>
+  
 
 </style>

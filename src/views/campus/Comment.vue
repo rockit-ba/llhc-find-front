@@ -58,9 +58,8 @@
         </van-col>
         
     </van-row>
-    
-    
-    <van-row type="flex" class="comment-tabbar" align="center" >
+   
+    <van-row type="flex" class="comment-tabbar" align="center" v-show="userid != undefined && userid != ''">
         <van-col span="19" >
             <van-field
                 v-model="commentContent"
@@ -73,6 +72,7 @@
         <van-col>
             <van-button size="small" type="primary" @click="publishComment">发送</van-button>
         </van-col>
+        
     </van-row>
     
 
@@ -188,7 +188,12 @@ export default {
         this.userid = getUser().id
         
         
-    }
+    },
+    activated () {
+        
+        this.userid = getUser().id
+    },
+
 }
 </script>
 

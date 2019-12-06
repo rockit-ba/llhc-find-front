@@ -260,6 +260,7 @@ export default {
                   message: '上传中...',
                   forbidClick: true
                 });
+                const _router = this.$router
                 //不仅要传图片，还要获取用户的id，后台上传成功后修改用户的头像地址
                 settingAvatarRequest(this.fileList[0].content,this.fileList[0].file.name,getUser().id).then(res => {
                     //返回一个头像的上传成功地址
@@ -270,6 +271,11 @@ export default {
                       this.fileList = []
                       //修改原来cookit中的头像信息
                       updateAvatar(res.data)
+                    }else if(res.code == 20004){
+                      _router.push({
+                        name: 'login',
+                        params: {page: 'setting'}
+                      })
                     }else{
                       Toast.clear();
                       Toast.fail('上传失败，稍后重试~');
@@ -304,6 +310,11 @@ export default {
                       this.user.name = res.data
                       updateName(res.data)
                       Toast.clear();
+                  }else if(res.code == 20004){
+                    _router.push({
+                      name: 'login',
+                      params: {page: 'setting'}
+                    })
                   }
               })
             }
@@ -356,7 +367,7 @@ export default {
     },
     created () {
       //获取用户信息
-      if(getUser().id != undefined){
+      if(getUser().id != undefined && getUser().id != ''){
         this.user = getUser()
       }else{
         //跳转登录页面,

@@ -44,7 +44,8 @@
 
 <script>
 import {getUser} from 'common/auth'
-
+import {isLogin} from "network/isLogin"
+import {removeUser} from "common/auth"
 export default {
     name: 'All',
     data () {
@@ -98,7 +99,15 @@ export default {
        
     },
     created () {
-        this.user= getUser()
+        const _router = this.$router
+        isLogin().then(res => {
+            if(res.code == 20004){
+                removeUser()
+            }else{
+                this.user= getUser()
+            }
+        })
+        
     }
     
 

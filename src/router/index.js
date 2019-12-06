@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import {getUser} from "common/auth"
 
 const Login = () => import('components/Login.vue')
 const Register = () => import('components/Register.vue')
@@ -32,21 +33,33 @@ const routes = [
         path: 'main',
         name: 'main',
         component: Main,
+        meta: {
+          keepAlive: false, 
+        }
       },
       {
         path: 'campus',
         name: 'campus',
         component: Campus,
+        meta: {
+          keepAlive: true, 
+        }
       },
       {
         path: 'own',
         name: 'own',
         component: Own,
+        meta: {
+          keepAlive: false, 
+        }
       },
       {
         path: 'setting',
         name: 'setting',
         component: Setting,
+        meta: {
+          keepAlive: false, 
+        }
       },
       {
         path: 'black',
@@ -114,5 +127,15 @@ const router = new VueRouter({
   routes,
 
 })
+
+// router.beforeEach((to,from,next) => {
+//   console.log(to)
+//   if(to.fullPath == '/all/own' || to.fullPath == '/all/setting' ){
+//     if(getUser().id == undefined){
+//       router.push('/login')
+//     }
+//   }
+//   next()
+// })
 
 export default router
