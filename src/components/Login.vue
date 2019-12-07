@@ -134,6 +134,7 @@ export default {
                     if(_route.params.page != undefined){
                         _router.push("/all/"+_route.params.page)
                     }else{
+                        console.log(1)
                         _router.push("/all/main")
                     }
                     

@@ -58,8 +58,9 @@
         </van-col>
         
     </van-row>
-   
-    <van-row type="flex" class="comment-tabbar" align="center" v-show="userid != undefined && userid != ''">
+    
+    
+    <van-row type="flex" class="comment-tabbar" align="center" v-show="userid != ''">
         <van-col span="19" >
             <van-field
                 v-model="commentContent"
@@ -72,7 +73,6 @@
         <van-col>
             <van-button size="small" type="primary" @click="publishComment">发送</van-button>
         </van-col>
-        
     </van-row>
     
 
@@ -184,16 +184,11 @@ export default {
         if(this.$route.params.active != undefined){
             this.active = this.$route.params.active
         }
-
-        this.userid = getUser().id
+        if(getUser().id != undefined && getUser().id != ''){
+            this.userid = getUser().id
+        }
         
-        
-    },
-    activated () {
-        
-        this.userid = getUser().id
-    },
-
+    }
 }
 </script>
 

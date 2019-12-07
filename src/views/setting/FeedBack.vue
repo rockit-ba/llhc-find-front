@@ -56,17 +56,9 @@ export default {
             if(regexp.test(this.message)){
                 Toast('您输入了不合法的字符，可能是空格哦~')
             }else{
-              const _router = this.$router
               feedSubmitRequest(this.message).then(res => {
                     if(res.code == 20000){
-                      //清空当前的数据
-                      this.message = ''
                       Toast('提交成功，请耐心等待~')
-                    }else if(res.code == 20004){
-                      _router.push({
-                        name: 'login',
-                        params: {page: 'setting'}
-                      })
                     }else{
                       Toast('提交失败，稍后可以重试~')
                     }

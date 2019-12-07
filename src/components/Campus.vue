@@ -34,7 +34,7 @@
     </van-pull-refresh>
 
     <!-- 弹出添加动态 -->
-    <van-icon @click="islogin();" class="addActivity" size="40px" name="add" color="#EBDDC9" />
+    <van-icon @click="show=true" class="addActivity" size="40px" name="add" color="#EBDDC9" />
     <van-popup
       v-model="show"
       closeable
@@ -139,17 +139,6 @@ export default {
       }
     },
     methods: {
-      islogin() {
-        if(getUser().id != undefined  && getUser().id != '') {
-          this.show=true
-        }else {
-          Toast.fail("尚未登录！")
-          this.$router.push({
-            name: 'login',
-            params: {page: 'campus'}
-          })
-        }
-      },
       showPreviewImg(img){
         this.showImg = true
         this.images = [img]
@@ -175,7 +164,8 @@ export default {
       beforeRead(file) {
           Toast.loading({
             message: '上传中...',
-            forbidClick: true
+            forbidClick: true,
+            loadingType: 'spinner'
           });
           if (file.type !== 'image/jpeg' && file.type !== 'image/png' && file.type !== 'image/jpg' && file.type !== 'image/gif') {
             Toast('请上传 jpg 格式图片');
@@ -185,7 +175,6 @@ export default {
           }
         },
       afterRead(file) {
-          
           // 大于1MB的jpeg和png图片都缩小像素上传
         if(file.file.size>1000000) {
             // 创建Canvas对象(画布)
@@ -246,7 +235,6 @@ export default {
       Postgraduate,
     },
     created () {
-      
       if(this.$route.params.active != undefined){
         this.active = this.$route.params.active
       }

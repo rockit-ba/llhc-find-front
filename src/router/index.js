@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import {getUser} from "common/auth"
 
 const Login = () => import('components/Login.vue')
 const Register = () => import('components/Register.vue')
@@ -10,6 +9,7 @@ const Black = () => import('components/Black.vue')
 const Campus = () => import('components/Campus.vue')
 const Comment = () => import('views/campus/Comment.vue')
 const Own = () => import('components/Own.vue')
+const Message = () => import('views/own/Message.vue')
 const Setting = () => import('components/Setting.vue')
 const Container = () => import('components/Container.vue')
 const Info = () => import('views/setting/Info.vue')
@@ -33,16 +33,13 @@ const routes = [
         path: 'main',
         name: 'main',
         component: Main,
-        meta: {
-          keepAlive: false, 
-        }
       },
       {
         path: 'campus',
         name: 'campus',
         component: Campus,
         meta: {
-          keepAlive: true, 
+          keepAlive: true, //
         }
       },
       {
@@ -50,7 +47,7 @@ const routes = [
         name: 'own',
         component: Own,
         meta: {
-          keepAlive: false, 
+          keepAlive: false, //
         }
       },
       {
@@ -58,13 +55,16 @@ const routes = [
         name: 'setting',
         component: Setting,
         meta: {
-          keepAlive: false, 
+          keepAlive: false, //
         }
       },
       {
         path: 'black',
         name: 'black',
         component: Black,
+        meta: {
+          keepAlive: false, //
+        }
       },
 
     ],
@@ -83,7 +83,10 @@ const routes = [
   {
     path: '/comment',
     name: 'comment',
-    component: Comment
+    component: Comment,
+    meta: {
+      keepAlive: false, //
+    }
   },
   {
     path: '/container',
@@ -110,6 +113,11 @@ const routes = [
         name: 'feedBack',
         component: FeedBack
       },
+      {
+        path: 'message',
+        name: 'message',
+        component: Message
+      },
     ]
   },
   
@@ -127,15 +135,5 @@ const router = new VueRouter({
   routes,
 
 })
-
-// router.beforeEach((to,from,next) => {
-//   console.log(to)
-//   if(to.fullPath == '/all/own' || to.fullPath == '/all/setting' ){
-//     if(getUser().id == undefined){
-//       router.push('/login')
-//     }
-//   }
-//   next()
-// })
 
 export default router

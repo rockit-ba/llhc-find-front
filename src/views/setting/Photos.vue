@@ -11,24 +11,21 @@
       </van-row>
     </van-sticky>
     
-    <van-row type="flex" justify="center" align="center">
-      <van-col span="24">
-        <van-grid :border="true" :column-num="3">
-          <van-grid-item v-for="item in photosList">
-            <van-image 
-              @click="show=true;showImg(item)"
-              :src="item" 
-            />
-          </van-grid-item>
-        </van-grid>
-      </van-col>
-    </van-row>
-    
+    <van-grid :border="true" :column-num="3" >
+      <van-grid-item v-for="item in photosList">
+        <van-image 
+        width="100%"
+        @click="showImg(item);show = true;" 
+        :src="item" />
+      </van-grid-item>
+    </van-grid>
+
     <!-- 预览图片 -->
     <van-image-preview
       v-model="show"
       :images="images"
     />
+      
   </div>
 </template>
 
@@ -42,7 +39,9 @@ export default {
       return {
         images: [],  //预览图片列表
         show: false, //是否显示预览图片
-        photosList: []  //图片列表
+
+        photosList: []
+        
       }
     },
     methods: {
@@ -58,25 +57,20 @@ export default {
     created () {
       Toast.loading({
         message: '加载中...',
-        forbidClick: true
+        forbidClick: true,
+        loadingType: 'spinner'
       });
-      const _router = this.$router
       photosList(getUser().id).then(res => {
         if(res.flag == true){
           this.photosList = res.data
-          Toast.clear();
-        }else if(res.code == 20004){
-          _router.push({
-            name: 'login',
-            params: {page: 'setting'}
-          })
+          Toast.clear()
         }
       })
     }
+
 }
 </script>
 
 <style>
-  
 
 </style>

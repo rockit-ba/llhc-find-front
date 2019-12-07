@@ -45,7 +45,8 @@
 <script>
 import {getUser} from 'common/auth'
 import {isLogin} from "network/isLogin"
-import {removeUser} from "common/auth"
+import {removeUser} from 'common/auth'
+import { Toast } from 'vant';
 export default {
     name: 'All',
     data () {
@@ -99,15 +100,14 @@ export default {
        
     },
     created () {
-        const _router = this.$router
         isLogin().then(res => {
-            if(res.code == 20004){
-                removeUser()
+            if(res.flag == true){
+                this.user = getUser()
             }else{
-                this.user= getUser()
+                removeUser()
             }
         })
-        
+
     }
     
 

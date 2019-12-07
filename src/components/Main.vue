@@ -16,12 +16,12 @@
               >
                 
                 <!-- 每一列的数据 -->
-                  <van-cell v-for="item in list" van-clearfix>
+                  <van-cell v-for="(item,index) in list" van-clearfix>
                       <slot name="default" >
                           <p class="desc">{{item.description}}</p>
-                          <van-image
+                          <van-image 
                               width="100%"
-                              height="190px" 
+                              height="230px"
                               fit="contain"
                               :src=item.picUrl
                               @click="showImg(item.picUrl);show = true;"
@@ -29,7 +29,7 @@
                           </van-image> 
                           <div class="bottom">
                               <p class="date">{{item.createTime}}</p>
-                              <van-button  class="findButtom" @click="claim(item.id)" round :type="claimStyle(item.upcoming)" size="small">认领</van-button>
+                              <van-button  class="findButtom" @click="claim(item.id,index)" round :type="claimStyle(item.upcoming)" size="small">认领</van-button>
                           </div>
                       </slot>
                   </van-cell>
@@ -83,34 +83,43 @@ export default {
         this.images = [img]
       },
       //用户认领的方法,用户点击的时候传入对应点击的物品的id和用户id
-      claim(propId){  //这里的是物品的id
+      claim(propId,index){  //这里的是物品的id
           const _router = this.$router
           //如果物品的upcoming=0，则提示用户已经被他人提交认领
           //getUser().id查询用户的id
-          Dialog.confirm({
-            title: '提示',
-            message: '您确定要提交认领申请吗？这需要登录权限哦'
-          }).then(() => {
-            // on confirm
-              mainClaimRequest(propId,getUser().id,_router).then(res => {
-                  if(res.code == 20007){
-                    const notify = this.$notify
-                    notify.setDefaultOptions({type:"warning"})
-                    notify('亲，该物品已被他人提交认领，请前往餐厅确认~');
-                  }else if(res.code == 20000){
-                      //此时被点击认领的物品的属性已经被修改
-                      this.onRefresh()
-                  }else if(res.code == 20004){
-                      //未登录，跳转登录页面
-                      _router.push({
-                        name: 'login',
-                        params: {page: 'main'}
-                      })
-                  }
-              })
-          }).catch(() => {
-            // on cancel
-          });
+          if(this.list[index].upcoming == 0){
+            const notify = this.$notify
+            notify.setDefaultOptions({type:"warning"})
+            notify('亲，该物品已被他人提交认领，请前往餐厅确认~');
+          }else{
+              Dialog.confirm({
+                title: '提示',
+                message: '您确定要提交认领申请吗？这需要登录权限哦'
+              }).then(() => {
+                // on confirm
+                  mainClaimRequest(propId,getUser().id,_router).then(res => {
+                      if(res.code == 20007){
+                        const notify = this.$notify
+                        notify.setDefaultOptions({type:"warning"})
+                        notify('亲，该物品已被他人提交认领，请前往餐厅确认~');
+                      }else if(res.code == 20000){
+                          //直接修改
+                          this.list[index].upcoming = 0
+                          //此时被点击认领的物品的属性已经被修改
+                          // this.onRefresh()
+                      }else if(res.code == 20004){
+                          //未登录，跳转登录页面
+                          _router.push({
+                            name: 'login',
+                            params: {page: 'main'}
+                          })
+                      }
+                  })
+              }).catch(() => {
+                // on cancel
+              });
+          }
+          
           
         
       },
@@ -160,6 +169,9 @@ export default {
             }, 500);
         }
     },
+    created () {
+      
+    }
     
 }
 </script>
@@ -173,7 +185,6 @@ export default {
   }
   .desc {
         border-radius: 13px 13px 13px 13px;
-        margin-bottom: 3%;
         text-align: center;
         background-color: antiquewhite;
    }
