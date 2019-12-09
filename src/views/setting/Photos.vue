@@ -47,7 +47,7 @@ export default {
     methods: {
         //回退
         photosBack(){
-            history.back()
+            this.$router.push({name:'setting'})
         },
         //预览图片
         showImg(img){

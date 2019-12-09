@@ -219,6 +219,7 @@ export default {
         },
         //展出自己的动态
         changeActivity() {
+          
           //证明当前是关闭的，要打开
           if(this.activityShow == false){
             this.showActivity()
@@ -303,6 +304,7 @@ export default {
     },
 
     created () {
+
       if(getUser().id != undefined && getUser().id != ''){
           getMessageNum(getUser().id).then(res => {
             if(res.flag == true){
@@ -321,6 +323,16 @@ export default {
         })
       }
       
+    },
+    //控制从其他页面回来的时候还在当前滚动的页面
+    beforeRouteLeave (to, from, next) {
+      this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+      next()
+    },
+    beforeRouteEnter (to, from, next) {
+      next(vm => {
+        document.body.scrollTop = vm.scrollTop
+      })
     },
 
     //用于控制tabbar的item显示

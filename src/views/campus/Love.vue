@@ -104,9 +104,34 @@ export default {
             finished: false,  //是否完成所有加载
 
             page: 0,
-            size: 10,
+            size: 3,
             length: 0,
 
+        }
+    },
+    props: ['newActivity'],
+    watch: {
+        newActivity: {
+            handler(newValue, oldValue) {
+                this.finished = false
+                this.list = []
+                this.page = 1
+                listRequest(this.page,this.size,0).then(res => {
+                    for (let i = 0; i < res.data.records.length; i++) {
+                        this.list.push(res.data.records[this.length])
+                        this.length = this.length+1
+                    }
+                    this.length = 0
+                    // 加载状态结束
+                    this.loading = false;
+
+                    // 数据全部加载完成
+                    if (this.list.length >= res.data.total) {
+
+                        this.finished = true;
+                    }
+                })
+            }
         }
     },
     methods: {
@@ -117,6 +142,7 @@ export default {
         },
         //点击评论
        comment(id) {
+           this.$emit('comment')
          //弹出评论列表
           this.$router.push({
               name: 'comment',
@@ -147,6 +173,9 @@ export default {
                 
             }, 500);
         }
+    },
+    created () {
+        
     },
     
 

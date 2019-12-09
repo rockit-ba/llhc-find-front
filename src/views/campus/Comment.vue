@@ -22,7 +22,7 @@
                 finished-text="没有更多了"
                 @load="onLoad"
             >
-                <van-cell v-for="item in list">
+                <van-cell v-for="(item,index) in list">
                     <van-row  slot="default" >
                         <!-- 头像日期 不需要居中-->
                         <van-row>
@@ -42,7 +42,7 @@
                             </van-col>
                             <van-col offset="9" v-show="item.userid == userid">
                                 <!-- 删除自己的评论 -->
-                                <van-icon size="16px" name="delete" @click="removeComment(item._id)"></van-icon>
+                                <van-icon size="16px" name="delete" @click="removeComment(item._id,index)"></van-icon>
                             </van-col>
                         </van-row>
                         <!-- 描述 不需要居中-->
@@ -109,7 +109,7 @@ export default {
     },
     methods: {
         //删除评论
-        removeComment(_id) {
+        removeComment(_id,index) {
             Dialog.confirm({
                 title: '删除',
                 message: '确认删除评论吗？'
@@ -117,11 +117,8 @@ export default {
                 // on confirm
                 removeComment(_id).then(res => {
                     if(res.flag == true){
+                        this.list.pop(index)
                         Toast.success(res.message);
-                        this.$router.push({
-                            name: 'black',
-                            params: {page: 'comment',backpage:this.page,active:this.active, itemId: this.itemId}
-                        })
                     }
                 })
             }).catch(() => {
@@ -136,15 +133,19 @@ export default {
             })
         },
         publishComment(){
+            Toast.loading({
+                message: '加载中...',
+                forbidClick: true,
+                loadingType: 'spinner'
+            });
             //发布评论后台要做的事情：
             //userid（头像 名称 时间）评论的动态的id 评论内容 对动态的评论字段+1
             commentPublish(getUser().id,getUser().name,getUser().avatar,this.commentContent,this.itemId).then(res => {
                 if(res.flag == true){
+                    this.commentContent = ''
+                    this.list.push(res.data)
+                    Toast.clear()
                     Toast.success(res.message);
-                    this.$router.push({
-                        name: 'black',
-                        params: {page: 'comment',backpage:this.page,active:this.active, itemId: this.itemId}
-                    })
                 }else{
                     Toast.fail('评论失败稍后重试');
                 }

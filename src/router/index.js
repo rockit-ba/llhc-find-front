@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
+
 const Login = () => import('components/Login.vue')
 const Register = () => import('components/Register.vue')
 const All = () => import('components/All.vue')
@@ -39,7 +40,7 @@ const routes = [
         name: 'campus',
         component: Campus,
         meta: {
-          keepAlive: true, //
+          keepAlive: false, //
         }
       },
       {
@@ -62,11 +63,7 @@ const routes = [
         path: 'black',
         name: 'black',
         component: Black,
-        meta: {
-          keepAlive: false, //
-        }
       },
-
     ],
     
   },
@@ -88,6 +85,7 @@ const routes = [
       keepAlive: false, //
     }
   },
+  
   {
     path: '/container',
     name: 'container',
@@ -123,17 +121,37 @@ const routes = [
   
 ]
 
+
+
 //解决Navigating to current location ("/list") is not allowed问题
 const routerPush = VueRouter.prototype.push
 VueRouter.prototype.push = function push(location) {
   return routerPush.call(this, location).catch(error=> error)
 }
 
-
 const router = new VueRouter({
   mode: 'history',
   routes,
+})
 
+
+router.beforeEach((to, from, next) => {
+  //从底部栏中任意其他一个进入校园页面就刷新
+  if ((from.name == 'main' && to.name == 'campus') || (from.name == 'own' && to.name == 'campus') || (from.name == 'setting' && to.name == 'campus') || (from.name == 'black' && to.name == 'campus')) {
+      to.meta.keepAlive = true;
+  //从评论回到校园不刷新
+  }else if(from.name == 'comment' && to.name == 'campus'){
+    to.meta.keepAlive = true;}
+  //从评论回到自己的动态不刷新
+  else if(from.name == 'comment' && to.name == 'own'){
+    to.meta.keepAlive = true;
+  //从main campus setting 我的消息主页回到我的主页刷新
+  }else if((from.name == 'message' && to.name == 'own') || (from.name == 'main' && to.name == 'own') || (from.name == 'campus' && to.name == 'own') || (from.name == 'settinf' && to.name == 'own')){
+    to.meta.keepAlive = false;
+  }
+
+  next();
+  
 })
 
 export default router

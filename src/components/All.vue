@@ -21,14 +21,18 @@
                 </van-col>
             </van-row>
         </van-sticky>
+        
         <!-- 这里是每个模块要展示的东西 -->
         <div  >
+            
             <!-- 设置内容的顶部和底部被固定栏位遮挡的部分，这个非常重要 -->
             <div style="margin-bottom:50px;" >
+                
                 <keep-alive>
                     <router-view v-if="$route.meta.keepAlive"  @currentPage=changPage></router-view>
                 </keep-alive>
                 <router-view v-if="!$route.meta.keepAlive" @currentPage=changPage></router-view>
+                
             </div>
         </div>
 
@@ -59,7 +63,7 @@ export default {
             flag: false,  //是否显示小红点
             active: 0,  //默认首页激活状态
 
-            isShowAvatar: true,            
+            isShowAvatar: true,   
         }
     },
     components:{
@@ -108,7 +112,7 @@ export default {
             }
         })
 
-    }
+    },
     
 
 }

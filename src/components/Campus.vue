@@ -16,10 +16,10 @@
             v-model="active"
             @click="onClick"
             >
-            
+            <keep-alive>
             <!-- 日常告白 -->
-            <love @previewImg=showPreviewImg></love>  
-    
+              <love @comment="commentpage" :newActivity="newActivity"  @previewImg=showPreviewImg></love>  
+            </keep-alive>
             <!-- 物品交流 -->
             <things @previewImg=showPreviewImg></things>
             
@@ -136,9 +136,15 @@ export default {
         images: [],  //预览的图片列表
         showImg: false,  //预览图片
 
+        newActivity: false,
+
+        isCache: false
       }
     },
     methods: {
+      commentpage() {
+        this.isCache = true
+      },
       showPreviewImg(img){
         this.showImg = true
         this.images = [img]
@@ -148,12 +154,14 @@ export default {
         if(this.activityDesc == '' || this.fileList.length == 0){
           Toast('内容或者图片不能为空');
         }else{
+          const _router = this.$router
           activityUpRequest(this.activityDesc,this.type,getUser().id,this.fileList[0].file.name,this.fileList[0].content).then(res => {
             if(res.flag == true){
               Toast.success(res.message);
               this.activityDesc = ''
               this.fileList = []
               this.show = false
+              this.onRefresh()
               
             }else{
               Toast.fail(res.message);
@@ -209,23 +217,30 @@ export default {
         this.active = index
       },
       onRefresh() {
+          
           const _router = this.$router
           //注意回调函数中得不到当前对象，包括它的值
           let activeFlag = this.active
+          const _this = this
           setTimeout(() => {
+            // window.location.reload()
             //跳转到空白页面，然后立马跳回来
             // _router.replace("/all/black")
-            _router.replace({
-              name: 'black',
-              params: {page: 'campus',active: activeFlag}
-            })
+            // _router.replace({
+            //   name: 'black',
+            //   params: {page: 'campus',active: activeFlag}
+            // })
+            this.newActivity = !this.newActivity
+            
             this.$toast('刷新成功');
             this.isLoading = false;  
           },error => {
             this.$toast('刷新失败');
             this.isLoading = false;
           },500)
+          
       },
+
     },
     components: {
       Swipe,
@@ -242,7 +257,31 @@ export default {
     mounted () {
       //控制tabbar的item显示
         this.$emit('currentPage',1)
+        
     },
+    activated(){
+      //默认不缓存，如果是要缓存就把他改为不缓存，也不必担心下次的缓存，因为一点点击了comment就会改变为 
+      if(this.isCache == true){
+        this.isCache =false
+      }else if(this.isCache == false){
+        this.newActivity = !this.newActivity
+        // this.isCache = true
+      }
+      
+        
+    },
+    //控制从其他页面回来的时候还在当前滚动的页面
+    beforeRouteLeave (to, from, next) {
+      this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+      next()
+    },
+    beforeRouteEnter (to, from, next) {
+      next(vm => {
+        document.body.scrollTop = vm.scrollTop
+      })
+    },
+    
+    
 }
 </script>
 
