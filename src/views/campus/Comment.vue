@@ -105,6 +105,7 @@ export default {
             length: 0,
 
             userid: '',
+            itemIndex: 0
         }
     },
     methods: {
@@ -117,6 +118,7 @@ export default {
                 // on confirm
                 removeComment(_id).then(res => {
                     if(res.flag == true){
+                        this.$store.commit('removeComment',this.itemIndex)
                         this.list.pop(index)
                         Toast.success(res.message);
                     }
@@ -142,6 +144,7 @@ export default {
             //userid（头像 名称 时间）评论的动态的id 评论内容 对动态的评论字段+1
             commentPublish(getUser().id,getUser().name,getUser().avatar,this.commentContent,this.itemId).then(res => {
                 if(res.flag == true){
+                    this.$store.commit('addComment',this.itemIndex)
                     this.commentContent = ''
                     this.list.push(res.data)
                     Toast.clear()
@@ -184,6 +187,9 @@ export default {
         }
         if(this.$route.params.active != undefined){
             this.active = this.$route.params.active
+        }
+        if(this.$route.params.itemIndex != undefined){
+            this.itemIndex = this.$route.params.itemIndex
         }
         if(getUser().id != undefined && getUser().id != ''){
             this.userid = getUser().id

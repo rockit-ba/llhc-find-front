@@ -137,7 +137,7 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   //从底部栏中任意其他一个进入校园页面就刷新
-  if ((from.name == 'main' && to.name == 'campus') || (from.name == 'own' && to.name == 'campus') || (from.name == 'setting' && to.name == 'campus') || (from.name == 'black' && to.name == 'campus')) {
+  if ((from.name == 'main' && to.name == 'campus') || (from.name == 'own' && to.name == 'campus') || (from.name == 'setting' && to.name == 'campus')) {
       to.meta.keepAlive = true;
   //从评论回到校园不刷新
   }else if(from.name == 'comment' && to.name == 'campus'){

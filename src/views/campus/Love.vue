@@ -19,7 +19,7 @@
                 finished-text="没有更多了"
                 @load="onLoad"
             >
-                <van-cell v-for="item in list" >
+                <van-cell v-for="(item,index) in list" >
                     <van-row  slot="default" >
                         <!-- 头像日期 不需要居中-->
                         <van-row>
@@ -74,7 +74,7 @@
                                     name="comment-o" 
                                     size="150%"
                                     :info="item.commentNum"
-                                    @click="showComment=true;comment(item.id)"
+                                    @click="showComment=true;comment(item.id,index)"
                                 />
                             </van-col>
                         </van-row>
@@ -110,13 +110,20 @@ export default {
         }
     },
     props: ['newActivity'],
+    computed: {
+        isFollow () {
+            return this.$store.state.isChangeComment;　//需要监听的数据
+        }
+    },
     watch: {
+        //事实更新动态
         newActivity: {
             handler(newValue, oldValue) {
                 this.finished = false
                 this.list = []
                 this.page = 1
                 listRequest(this.page,this.size,0).then(res => {
+                    // console.log(this.page)
                     for (let i = 0; i < res.data.records.length; i++) {
                         this.list.push(res.data.records[this.length])
                         this.length = this.length+1
@@ -132,6 +139,24 @@ export default {
                     }
                 })
             }
+        },
+        //实时更新评论数
+        isFollow: {
+            handler(newValue,oldValue) {
+                let id = this.$store.state.id
+                let state = this.$store.state.addOrRemove
+                if(id != undefined && state == 'add'){
+                    if(this.list[id] != undefined){
+                        this.list[id].commentNum = this.list[id].commentNum+1
+                    }
+                    
+                } else if(id != undefined && state == 'remove'){
+                    if(this.list[id] != undefined){
+                        this.list[id].commentNum = this.list[id].commentNum-1
+                    }
+                    
+                }
+            }
         }
     },
     methods: {
@@ -141,12 +166,12 @@ export default {
             
         },
         //点击评论
-       comment(id) {
+       comment(id,index) {
            this.$emit('comment')
          //弹出评论列表
           this.$router.push({
               name: 'comment',
-              params: {itemId: id,page: 'campus',active:0}
+              params: {itemId: id,page: 'campus',active:0,itemIdex: index}
           })
 
        },

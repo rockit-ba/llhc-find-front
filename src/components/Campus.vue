@@ -16,18 +16,22 @@
             v-model="active"
             @click="onClick"
             >
-            <keep-alive>
+            
             <!-- 日常告白 -->
-              <love @comment="commentpage" :newActivity="newActivity"  @previewImg=showPreviewImg></love>  
-            </keep-alive>
+            <love @comment="commentpage" :newActivity="newActivity"  @previewImg=showPreviewImg></love>  
+            
+           
             <!-- 物品交流 -->
-            <things @previewImg=showPreviewImg></things>
+            <things @comment="commentpage" :newActivity="newActivity" @previewImg=showPreviewImg></things>
+            
             
             <!-- 问题求助 -->
-            <problom @previewImg=showPreviewImg></problom>
+            <problom @comment="commentpage" :newActivity="newActivity" @previewImg=showPreviewImg></problom>
+           
+            
             <!-- 考研话题 -->
-            <postgraduate @previewImg=showPreviewImg></postgraduate>
-
+            <postgraduate @comment="commentpage" :newActivity="newActivity" @previewImg=showPreviewImg></postgraduate>
+            
           </van-tabs>
         </van-col>
       </van-row>
@@ -267,7 +271,6 @@ export default {
         this.newActivity = !this.newActivity
         // this.isCache = true
       }
-      
         
     },
     //控制从其他页面回来的时候还在当前滚动的页面
